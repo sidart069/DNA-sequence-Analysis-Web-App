@@ -4,10 +4,18 @@ from Bio import SeqIO
 import neatbio.sequtils as utils
 from collections import Counter
 
+
+
+#new added line
+import io
+st.set_option('deprecation.showPyplotGlobalUse', False)
+
+
 import matplotlib.pyplot as plt
 import matplotlib
 matplotlib.use("Agg")
 import numpy as np
+
 
 
 def delta(x,y):
@@ -62,7 +70,9 @@ def main():
         seq_file=st.file_uploader("Upload the .FASTA file for any DNA analysis of the considered Genome.", type=["fasta","fa"])
 
         if seq_file is not None:
-            dna_record= SeqIO.read(seq_file,"fasta")
+            byte_str =seq_file.read()
+            text_obj=byte_str.decode('UTF-8')
+            dna_record= SeqIO.read(io.StringIO(text_obj),"fasta")
             #st.write(dna_record)
             dna_seq= dna_record.seq
 
@@ -76,10 +86,10 @@ def main():
             st.subheader("Nucleotide Frequency :")
             dna_freq=Counter(dna_seq)
             st.write(dna_freq)
-            adenine_color=st.beta_color_picker("Toggle the Adenine Colour ")
-            guanine_color=st.beta_color_picker("Toggle the Guanine Colour ")
-            thymine_color=st.beta_color_picker("Toggle the Thymine Colour ")
-            cytosine_color=st.beta_color_picker("Toggle the Cytosine Colour ")
+            adenine_color=st.color_picker("Toggle the Adenine Colour ")
+            guanine_color=st.color_picker("Toggle the Guanine Colour ")
+            thymine_color=st.color_picker("Toggle the Thymine Colour ")
+            cytosine_color=st.color_picker("Toggle the Cytosine Colour ")
 
 
             if st.button("Plot frequency"):
@@ -111,7 +121,7 @@ def main():
                 st.write(aa_freq)
 
             elif st.checkbox("Plot the Amino Acid frequency :"):
-                aa_color=st.beta_color_picker("Pick the Amino acid color:")
+                aa_color=st.color_picker("Pick the Amino acid color:")
                 #barlist= plt.bar(aa_freq.keys(),aa_freq.values(),color=aa_color)
                 #barlist[2].set_color(aa_color)
                 plt.bar(aa_freq.keys(),aa_freq.values(),color=aa_color)
@@ -147,8 +157,14 @@ def main():
 
 
         if seq_file1 and seq_file2 is not None:
-            dna_record1= SeqIO.read(seq_file1,"fasta")
-            dna_record2= SeqIO.read(seq_file2,"fasta")
+            byte_str1 =seq_file1.read()
+            text_obj1=byte_str1.decode('UTF-8')
+            dna_record1= SeqIO.read(io.StringIO(text_obj1),"fasta")
+			
+            byte_str2 =seq_file2.read()
+            text_obj2=byte_str2.decode('UTF-8')
+            dna_record2= SeqIO.read(io.StringIO(text_obj2),"fasta")			
+
             #st.write(dna_record)
             dna_seq1= dna_record1.seq
             dna_seq2= dna_record2.seq
@@ -177,4 +193,6 @@ def main():
         st.subheader("About the application and about us :)")
 
 if __name__=='__main__':
-    main()
+	main()
+
+
